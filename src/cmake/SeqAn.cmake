@@ -1,14 +1,14 @@
 if (SEQAN_ROOT)
-	if (NOT EXISTS ${SEQAN_ROOT}/share/cmake/Modules/FindSeqAn.cmake)
-		message ( FATAL_ERROR "SEQAN_ROOT was specified but '${SEQAN_ROOT}/share/cmake/Modules/FindSeqAn.cmake' does not exist." )
+	if (NOT EXISTS ${SEQAN_ROOT}/share/cmake/seqan/seqan-config.cmake)
+		message ( FATAL_ERROR "SEQAN_ROOT was specified but '${SEQAN_ROOT}/share/cmake/seqan/seqan-config.cmake' does not exist." )
 	endif()
 else()
-	set ( SEQAN_URL "https://github.com/skrakau/seqan/releases/download/seqan-v2.2.0_mod/seqan-library-2.2.0_mod.zip")
-	set ( SEQAN_MD5 "7758a6b8f3000e07d580cfdd4cc57f2f")
-	set ( SEQAN_ZIP_OUT ${CMAKE_CURRENT_BINARY_DIR}/seqan-library-2.2.0_mod.zip )
-	set ( SEQAN_ROOT ${CMAKE_CURRENT_BINARY_DIR}/seqan-library-2.2.0_mod )
+	set ( SEQAN_URL "https://github.com/seqan/seqan/releases/download/seqan-v2.4.0/seqan-library-2.4.0.zip")
+	set ( SEQAN_MD5 "201d9455c3b391517466d82f78841810")
+	set ( SEQAN_ZIP_OUT ${CMAKE_CURRENT_BINARY_DIR}/seqan-library-2.4.0.zip )
+	set ( SEQAN_ROOT ${CMAKE_CURRENT_BINARY_DIR}/seqan-library-2.4.0 )
 
-	if (NOT EXISTS ${SEQAN_ROOT}/share/cmake/Modules/FindSeqAn.cmake )
+	if (NOT EXISTS ${SEQAN_ROOT}/share/cmake/seqan/seqan-config.cmake )
 		# Download zip file
 		message ("Downloading ${SEQAN_URL}")
 		file (DOWNLOAD ${SEQAN_URL} ${SEQAN_ZIP_OUT}
@@ -28,13 +28,14 @@ else()
 		endif()
 	endif()
 	# Check if FindSeqAn.cmake can be found wher it should
-	if (NOT EXISTS ${SEQAN_ROOT}/share/cmake/Modules/FindSeqAn.cmake )
+	if (NOT EXISTS ${SEQAN_ROOT}/share/cmake/seqan/seqan-config.cmake)
 		message (FATAL_ERROR "Failed to download and unpack '${SEQAN_URL}'")
 	endif()
 endif ()
 
-LIST ( APPEND CMAKE_MODULE_PATH ${SEQAN_ROOT}/share/cmake/Modules/ )
+LIST ( APPEND CMAKE_PREFIX_PATH ${SEQAN_ROOT}/share/cmake/seqan/ )
 SET( SEQAN_INCLUDE_PATH ${SEQAN_ROOT}/include/ )
+SET( SEQAN_DEFINITIONS "${SEQAN_DEFINITIONS} -DSEQAN_BGZF_NUM_THREADS=1" )
 
 # Search for zlib as a dependency for SeqAn.
 find_package (ZLIB REQUIRED)
